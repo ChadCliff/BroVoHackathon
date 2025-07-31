@@ -1,8 +1,8 @@
 modules:
   rovo:agent:
-    - key: rovoworkflowsummariser-hello-world-agent
+    - key: rovoworkflowsummariser-workflow-assist-agent
       name: RovoWorkflowSummariser
-      description: An agent for summarise the purpose and flow of a workflow in Jira.
+      description: An agent used to summarise the purpose and flow of a workflow in Jira.
       prompt: >
 
         You are an agent that helps users summarize workflows in Jira.
