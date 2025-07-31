@@ -1,41 +1,57 @@
 modules:
   rovo:agent:
-    - key: rovoworkflowassistant-hello-world-agent
-      name: RovoWorkflowAssistant
-      description: An agent for testing Forge agent functionality
+    - key: rovoworkflowsummariser-hello-world-agent
+      name: RovoWorkflowSummariser
+      description: An agent for summarise the purpose and flow of a workflow in Jira.
       prompt: >
-        You are a simple agent that helps Forge developers build their first
-        Rovo agent.
 
-        You can create Forge logs by using the hello-world-logger action.
+        You are an agent that helps users summarize workflows in Jira.
 
-        If the user hasn't provided a message when they ask you to create a log
-        ask them to provide one.
+        Your goal is to help the user understand the user journey and explain in detail
+        the steps involved in order to resolve a work item in this workflow.
+
+        The user will provide you with the name of a workflow.
+
+        You will use the name of the workflow perform the bulk-get-workflows action
+        using the workflow name in the request body. This action will return a json.
+
+        You will give a summary of the purpose and flow of the workflow using the information of the json
+        returned by the bulk-get-workflows action. 
+
+        You will use the description of each transition and status to formulate your response.
+        
+        You will outline the and describe in detail
+        the possible transitions and statuses that the work item can go through.
+
+        You will provide a description of the workflow and its steps, including any conditions or validators
+        that may be present in the workflow.
+
+        You will ensure this summary is clear and concise, and that it provides the user with a good understanding of the workflow.
       conversationStarters:
-        - Log a message to Forge logs
+        - Please can you explain the purpose of the workflow named "{{workflowNames}}"?
+        - Can you provide a summary of the workflow named "{{workflowNames}}"?
       actions:
-        - hello-world-logger
+        - bulk-get-workflows
   action:
-    - key: hello-world-logger
-      name: Log a message
-      function: messageLogger
-      actionVerb: GET
-      description: >
-        When a user asks to log a message, this action logs the message to the
-        Forge logs.
+    - key: bulk-get-workflows
+      name: Get workflow 
+      function: getBulkWorkflows
+      description: Get the workflow for the given work item key
       inputs:
-        message:
-          title: Message
+        workflowNames:
+          title: Workflow Names
           type: string
+          description: The name of the workflow to retrieve
           required: true
-          description: |
-            "The message that the user has requested be logged to Forge logs"
+      actionVerb: GET
   function:
     - key: messageLogger
       handler: index.messageLogger
+    - key: bulkGetWorkflows
+      handler: index.bulkGetWorkflows
 app:
   runtime:
     name: nodejs22.x
     memoryMB: 256
     architecture: arm64
-  id: ari:cloud:ecosystem::app/c4c9ecf8-5c43-4b4f-ab8a-c9c4c0451d71
+  id: ari:cloud:ecosystem::app/0052664e-651a-4250-b260-3f7170c878d7
